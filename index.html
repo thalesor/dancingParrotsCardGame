@@ -27,7 +27,35 @@
    
     <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
    <script>
-      
+    let script = document.createElement('script');
+        script.src = "scripts.js";
+        document.body.appendChild(script);
+        
+      const darkSwitch = document.querySelector(".dark-switch");
+        const lightSwitch = document.querySelector(".light-switch");
+        const body = document.querySelector("body");
+
+        darkSwitch.addEventListener("click", () => {
+          body.classList.add("dark");
+
+          darkSwitch.classList.add("hidden");
+          lightSwitch.classList.remove("hidden");
+          localStorage.setItem("darkmode", true);
+        });
+
+        lightSwitch.addEventListener("click", () => {
+          body.classList.remove("dark");
+
+          lightSwitch.classList.add("hidden");
+          darkSwitch.classList.remove("hidden");
+          localStorage.removeItem("darkmode");
+        });
+
+        if (localStorage.getItem("darkmode")) {
+          body.classList.add("dark");
+          darkSwitch.classList.add("hidden");
+          lightSwitch.classList.remove("hidden");
+        }
    </script>
    
 </body>
