@@ -1,6 +1,5 @@
 //LIsta de dados que armazena os passaros, como objetos
-const passaros = 
-[
+const passaros = [
   {
     id: 0,
     identificador: "bobrossparrot",
@@ -47,67 +46,79 @@ let container = null;
 let baralho = null;
 let escolhidos = null;
 
-//Função que faz o jogo iniciar.
-function Iniciar()
-{
-    do {
-          numDeCartas = parseInt(prompt('Com quantas cartas quer jogar? (Somente pares de 4 a 14)'));
-    }
-    while(!arrayPares.includes(numDeCartas));
-    paresRestantes = numDeCartas/2;
-    escolhidos = passaros.sort(comparador).slice(0,paresRestantes);
-    container = document.querySelector("section > .container");
-    baralho = container.querySelector("ul");
-    baralho.innerHTML = '';
-    container.className = '';
-    container.classList.add(`pair-of-${paresRestantes}`);
-    baralho.insertAdjacentHTML("afterbegin", distribuirCartas(escolhidos.sort(comparador)));
-    baralho.insertAdjacentHTML("afterbegin", distribuirCartas(escolhidos.sort(comparador)));
-}
+let startTime = null;
+let elapsedTime = 0;
+let timerInterval = null;
+let updateClock = false;   
 
-function selecionar(item) 
-  {
-    if(!item.classList.contains('completed'))
-    {
-      jogadas++;
-      let cartasSelecionadas = document.querySelectorAll(".card.selected:not(.completed)");
-      if(cartasSelecionadas.length < 2)
-      item.classList.add('selected');
-      cartasSelecionadas = document.querySelectorAll(".card.selected:not(.completed)");
-      if(cartasSelecionadas.length >= 2)
-      {
-          let card1 = cartasSelecionadas[0];
-          let card2 = cartasSelecionadas[1];
-        
-          if(card1.dataset.identificador != card2.dataset.identificador)
-          {
-            setTimeout(function(){
-            card1.classList.remove('selected');
-            card2.classList.remove('selected');
-            },1000);
-          }
-          else if(card1.dataset.identificador === card2.dataset.identificador)
-          { 
-            card1.classList.add('completed');
-            card2.classList.add('completed');
-            paresRestantes--;
-            if(paresRestantes === 0)
-            {
-              alert("virou todos os pares");
-            }
-            
-          }  
-        }
-    }
-  }
- 
+//Função que faz o jogo iniciar.
+function Iniciar() {
+  do {
+    numDeCartas = parseInt(
+      prompt("Com quantas cartas quer jogar? (Somente pares de 4 a 14)")
+    );
+  } while (!arrayPares.includes(numDeCartas));
+  paresRestantes = numDeCartas / 2;
+  escolhidos = passaros.sort(comparador).slice(0, paresRestantes);
+  container = document.querySelector("section > .container");
+  baralho = container.querySelector("ul");
+  baralho.innerHTML = "";
+  container.className = "";
+  jogadas = 0;
+  container.classList.add(`pair-of-${paresRestantes}`);
+  baralho.insertAdjacentHTML(
+    "afterbegin",
+    distribuirCartas(escolhidos.sort(comparador))
+  );
+  baralho.insertAdjacentHTML(
+    "afterbegin",
+    distribuirCartas(escolhidos.sort(comparador))
+  );
+}
 
 // Esta função pode ficar separada do código acima, onde você preferir
-function comparador() { 
-  return Math.random() - 0.5; 
+function comparador() {
+  return Math.random() - 0.5;
 }
 
-// Função que distrubui as cartas(preenche a lista ul com seus respectivos li)
+function selecionar(item) {
+  if (!item.classList.contains("completed")) {
+    jogadas++;
+    let cartasSelecionadas = document.querySelectorAll(
+      ".card.selected:not(.completed)"
+    );
+    if (cartasSelecionadas.length < 2) item.classList.add("selected");
+    cartasSelecionadas = document.querySelectorAll(
+      ".card.selected:not(.completed)"
+    );
+    if (cartasSelecionadas.length >= 2) {
+      let card1 = cartasSelecionadas[0];
+      let card2 = cartasSelecionadas[1];
+
+      if (card1.dataset.identificador != card2.dataset.identificador) {
+        setTimeout(function () {
+          card1.classList.remove("selected");
+          card2.classList.remove("selected");
+        }, 1000);
+      } else if (card1.dataset.identificador === card2.dataset.identificador) {
+        card1.classList.add("completed");
+        card2.classList.add("completed");
+        paresRestantes--;
+        if (paresRestantes === 0) {
+          setTimeout(function () {
+            let repeat = prompt(`Parabéns! Voce ganhou em ${jogadas} jogadas.
+                Deseja jogar de novo? 
+                1- para sim
+                2- para não
+                `);
+            
+          }, 1000);
+        }
+      }
+    }
+  }
+}
+
 function distribuirCartas(lista) {
   let html;
 
@@ -128,9 +139,6 @@ function distribuirCartas(lista) {
 
   return html;
 }
-
-
-
 
 
 Iniciar();
