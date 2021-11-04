@@ -53,7 +53,7 @@ let updateClock = false;
 //Função que faz o jogo iniciar.
 function Iniciar() {
   updateClock = true;
-  resetarRelogio();
+  clockReset();
   do {
     numDeCartas = parseInt(
       prompt("Com quantas cartas quer jogar? (Somente pares de 4 a 14)")
@@ -61,7 +61,8 @@ function Iniciar() {
   } while (!arrayPares.includes(numDeCartas));
   paresRestantes = numDeCartas / 2;
   escolhidos = passaros.sort(comparador).slice(0, paresRestantes);
-  container = document.querySelector("section > .container");
+  container = document.querySelector("section #container");
+  console.log(container);
   baralho = container.querySelector("ul");
   baralho.innerHTML = "";
   container.className = "";
@@ -75,7 +76,7 @@ function Iniciar() {
     "afterbegin",
     distribuirCartas(escolhidos.sort(comparador))
   );
-  iniciarRelogio();
+  clockStart();
 }
 
 // Esta função pode ficar separada do código acima, onde você preferir
@@ -114,6 +115,9 @@ function selecionar(item) {
                 1- para sim
                 2- para não
                 `);
+            if (repeat === "1") {
+              Iniciar();
+            }
           }, 1000);
         }
       }
@@ -164,23 +168,23 @@ function timeToString(time) {
   return `${formattedMM}:${formattedSS}:${formattedMS}`;
 }
 
-// Função que mostra o tempo no relógio
+// Create function to modify innerHTML
 
-function mostrarTempo(txt) {
+function print(txt) {
   document.getElementById("display").innerHTML = txt;
 }
 
-function iniciarRelogio() {
+function clockStart() {
   startTime = Date.now() - elapsedTime;
-  timerInterval = setInterval(function mostrar() {
+  timerInterval = setInterval(function printTime() {
     if (updateClock) elapsedTime = Date.now() - startTime;
-    mostrarTempo(timeToString(elapsedTime));
+    print(timeToString(elapsedTime));
   }, 10);
 }
 
-function resetarRelogio() {
+function clockReset() {
   clearInterval(timerInterval);
-  mostrarTempo("00:00:00");
+  print("00:00:00");
   elapsedTime = 0;
 }
 

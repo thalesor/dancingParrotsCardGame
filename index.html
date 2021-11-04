@@ -10,14 +10,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,100;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <title>Projeto parrotsCardGame</title>
+    <title>Projeto DrivenEats</title>
 </head>
 <body>
     
   
      <section>
       <h1 class="roboto">PARROT CARD GAME</h1>
-      <div class="container"><ul></ul></div>
+      <div class="circle">
+        <span class="time" id="display">00:00:00</span>
+      </div>
+      <div id="container" class="container"><ul></ul></div>
     </section>
    
     <div class="switches">
@@ -27,11 +30,11 @@
    
     <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
    <script>
-    let script = document.createElement('script');
+        let script = document.createElement('script');
         script.src = "scripts.js";
         document.body.appendChild(script);
-        
-      const darkSwitch = document.querySelector(".dark-switch");
+
+        const darkSwitch = document.querySelector(".dark-switch");
         const lightSwitch = document.querySelector(".light-switch");
         const body = document.querySelector("body");
 
