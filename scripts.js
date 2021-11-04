@@ -49,10 +49,11 @@ let escolhidos = null;
 let startTime = null;
 let elapsedTime = 0;
 let timerInterval = null;
-let updateClock = false;   
-
+let updateClock = false;
 //Função que faz o jogo iniciar.
 function Iniciar() {
+  updateClock = true;
+  resetarRelogio();
   do {
     numDeCartas = parseInt(
       prompt("Com quantas cartas quer jogar? (Somente pares de 4 a 14)")
@@ -74,6 +75,7 @@ function Iniciar() {
     "afterbegin",
     distribuirCartas(escolhidos.sort(comparador))
   );
+  iniciarRelogio();
 }
 
 // Esta função pode ficar separada do código acima, onde você preferir
@@ -105,13 +107,13 @@ function selecionar(item) {
         card2.classList.add("completed");
         paresRestantes--;
         if (paresRestantes === 0) {
+          updateClock = false;
           setTimeout(function () {
-            let repeat = prompt(`Parabéns! Voce ganhou em ${jogadas} jogadas.
+            let repeat = prompt(`Parabéns! Voce ganhou em ${jogadas} jogadas, levou ${elapsedTime}.
                 Deseja jogar de novo? 
                 1- para sim
                 2- para não
                 `);
-            
           }, 1000);
         }
       }
@@ -140,5 +142,46 @@ function distribuirCartas(lista) {
   return html;
 }
 
+// Convert time to a format of hours, minutes, seconds, and milliseconds
+
+function timeToString(time) {
+  let diffInHrs = time / 3600000;
+  let hh = Math.floor(diffInHrs);
+
+  let diffInMin = (diffInHrs - hh) * 60;
+  let mm = Math.floor(diffInMin);
+
+  let diffInSec = (diffInMin - mm) * 60;
+  let ss = Math.floor(diffInSec);
+
+  let diffInMs = (diffInSec - ss) * 100;
+  let ms = Math.floor(diffInMs);
+
+  let formattedMM = mm.toString().padStart(2, "0");
+  let formattedSS = ss.toString().padStart(2, "0");
+  let formattedMS = ms.toString().padStart(2, "0");
+
+  return `${formattedMM}:${formattedSS}:${formattedMS}`;
+}
+
+// Função que mostra o tempo no relógio
+
+function mostrarTempo(txt) {
+  document.getElementById("display").innerHTML = txt;
+}
+
+function iniciarRelogio() {
+  startTime = Date.now() - elapsedTime;
+  timerInterval = setInterval(function mostrar() {
+    if (updateClock) elapsedTime = Date.now() - startTime;
+    mostrarTempo(timeToString(elapsedTime));
+  }, 10);
+}
+
+function resetarRelogio() {
+  clearInterval(timerInterval);
+  mostrarTempo("00:00:00");
+  elapsedTime = 0;
+}
 
 Iniciar();
