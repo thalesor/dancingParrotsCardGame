@@ -64,6 +64,42 @@ function Iniciar()
     baralho.insertAdjacentHTML("afterbegin", distribuirCartas(escolhidos.sort(comparador)));
     baralho.insertAdjacentHTML("afterbegin", distribuirCartas(escolhidos.sort(comparador)));
 }
+
+function selecionar(item) 
+  {
+    if(!item.classList.contains('completed'))
+    {
+      jogadas++;
+      let cartasSelecionadas = document.querySelectorAll(".card.selected:not(.completed)");
+      if(cartasSelecionadas.length < 2)
+      item.classList.add('selected');
+      cartasSelecionadas = document.querySelectorAll(".card.selected:not(.completed)");
+      if(cartasSelecionadas.length >= 2)
+      {
+          let card1 = cartasSelecionadas[0];
+          let card2 = cartasSelecionadas[1];
+        
+          if(card1.dataset.identificador != card2.dataset.identificador)
+          {
+            setTimeout(function(){
+            card1.classList.remove('selected');
+            card2.classList.remove('selected');
+            },1000);
+          }
+          else if(card1.dataset.identificador === card2.dataset.identificador)
+          { 
+            card1.classList.add('completed');
+            card2.classList.add('completed');
+            paresRestantes--;
+            if(paresRestantes === 0)
+            {
+              alert("virou todos os pares");
+            }
+            
+          }  
+        }
+    }
+  }
  
 
 // Esta função pode ficar separada do código acima, onde você preferir
