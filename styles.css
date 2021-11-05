@@ -89,7 +89,7 @@ section ul {
 .face {
   width: 100%;
   height: 100%;
-  border: 1px solid #99cea8;
+  border: 1px solid var(--bg-card-back);
   border-radius: 5px;
   flex-shrink: 0;
   padding: 24px 7px 22px 10px;
@@ -207,6 +207,29 @@ li.card.selected.completed > .back-face {
 .switches > .light-switch.hidden {
   display: none;
 }
+
+.rainbow {
+  animation: rainbowColor 1s linear 0s infinite;
+}
+
+@keyframes rainbowColor {
+  from {
+    color: #6666ff;
+  }
+  10% {
+    color: #0099ff;
+  }
+  50% {
+    color: #00ff00;
+  }
+  75% {
+    color: #ff3399;
+  }
+  100% {
+    color: #ff7c01;
+  }
+}
+
 
 @media (max-width: 480px) {
   body {

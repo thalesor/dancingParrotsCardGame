@@ -50,8 +50,11 @@ let startTime = null;
 let elapsedTime = 0;
 let timerInterval = null;
 let updateClock = false;
+let h1 = document.querySelector("h1");
 //Função que faz o jogo iniciar.
 function Iniciar() {
+  h1.innerHTML = "PARROT CARD GAME";
+  h1.classList.remove('rainbow');
   updateClock = true;
   clockReset();
   do {
@@ -86,11 +89,16 @@ function comparador() {
 
 function selecionar(item) {
   if (!item.classList.contains("completed")) {
-    jogadas++;
     let cartasSelecionadas = document.querySelectorAll(
       ".card.selected:not(.completed)"
     );
-    if (cartasSelecionadas.length < 2) item.classList.add("selected");
+    if (cartasSelecionadas.length < 2)
+    {
+      item.classList.add("selected");
+      if(item != cartasSelecionadas[0])
+      jogadas++;
+    } 
+    item.classList.add("selected");
     cartasSelecionadas = document.querySelectorAll(
       ".card.selected:not(.completed)"
     );
@@ -109,8 +117,10 @@ function selecionar(item) {
         paresRestantes--;
         if (paresRestantes === 0) {
           updateClock = false;
+            h1.classList.add('rainbow');
+            h1.innerHTML = "Você venceu!!!";
           setTimeout(function () {
-            let repeat = prompt(`Parabéns! Voce ganhou em ${jogadas} jogadas, levou ${elapsedTime}.
+            let repeat = prompt(`Parabéns! Voce ganhou em ${jogadas} jogadas, levou cerca de ${millisToMinutesAndSeconds(elapsedTime)}.
                 Deseja jogar de novo? 
                 1- para sim
                 2- para não
@@ -166,6 +176,18 @@ function timeToString(time) {
   let formattedMS = ms.toString().padStart(2, "0");
 
   return `${formattedMM}:${formattedSS}:${formattedMS}`;
+}
+
+//Essa função foi sugerida em uma thread no StackOverFlow, ela é muito interessante pois converte milisegundos em segundos e minutos.
+function millisToMinutesAndSeconds(millis) {
+  var minutes = Math.floor(millis / 60000);
+  var seconds = ((millis % 60000) / 1000).toFixed(0);
+  let response = '';
+  if(minutes > 0)
+  response += `${minutes} minuto(s) e ${seconds} segundos`;
+  else
+  response = `${seconds} segundos`;
+  return response;
 }
 
 // Create function to modify innerHTML
