@@ -2,37 +2,37 @@
 const passaros = [
   {
     id: 0,
-    identificador: "bobrossparrot",
+    tipocarta: "bobrossparrot",
     imagem: "resources/bobrossparrot.gif"
   },
   {
     id: 1,
-    identificador: "explodyparrot",
+    tipocarta: "explodyparrot",
     imagem: "resources/explodyparrot.gif"
   },
   {
     id: 2,
-    identificador: "fiestaparrot",
+    tipocarta: "fiestaparrot",
     imagem: "resources/fiestaparrot.gif"
   },
   {
     id: 3,
-    identificador: "metalparrot",
+    tipocarta: "metalparrot",
     imagem: "resources/metalparrot.gif"
   },
   {
     id: 4,
-    identificador: "revertitparrot",
+    tipocarta: "revertitparrot",
     imagem: "resources/revertitparrot.gif"
   },
   {
     id: 5,
-    identificador: "tripletsparrot",
+    tipocarta: "tripletsparrot",
     imagem: "resources/tripletsparrot.gif"
   },
   {
     id: 6,
-    identificador: "unicornparrot",
+    tipocarta: "unicornparrot",
     imagem: "resources/unicornparrot.gif"
   }
 ];
@@ -45,18 +45,23 @@ let paresRestantes = null;
 let container = null;
 let baralho = null;
 let escolhidos = null;
+let h1 = document.querySelector("h1");
 
+/*As variáveis globais que serão usadas nas funções do relógio, eu vi uma thread com uma sugestão de um cronômetro cheiuo de botões no 
+//Stackoverflow, retirei todos os botões, dei uma alterada no código para servir ao meu propósito, não consegui pensar em nomes em poruguês,
+logo deixei em inglês.*/
 let startTime = null;
 let elapsedTime = 0;
 let timerInterval = null;
 let updateClock = false;
-let h1 = document.querySelector("h1");
-//Função que faz o jogo iniciar.
-function Iniciar() {
+
+
+//Abaixo vêm as funções que administram a lógica do jogo
+function iniciarJogo() {
   h1.innerHTML = "PARROT CARD GAME";
   h1.classList.remove('rainbow');
   updateClock = true;
-  clockReset();
+  resetTimer();
   do {
     numDeCartas = parseInt(
       prompt("Com quantas cartas quer jogar? (Somente pares de 4 a 14)")
@@ -79,15 +84,14 @@ function Iniciar() {
     "afterbegin",
     distribuirCartas(escolhidos.sort(comparador))
   );
-  clockStart();
+  iniciarTimer();
 }
 
-// Esta função pode ficar separada do código acima, onde você preferir
 function comparador() {
   return Math.random() - 0.5;
 }
 
-function selecionar(item) {
+function selecionarCarta(item) {
   if (!item.classList.contains("completed")) {
     let cartasSelecionadas = document.querySelectorAll(
       ".card.selected:not(.completed)"
@@ -106,12 +110,12 @@ function selecionar(item) {
       let card1 = cartasSelecionadas[0];
       let card2 = cartasSelecionadas[1];
 
-      if (card1.dataset.identificador != card2.dataset.identificador) {
+      if (card1.dataset.tipocarta != card2.dataset.tipocarta) {
         setTimeout(function () {
           card1.classList.remove("selected");
           card2.classList.remove("selected");
         }, 1000);
-      } else if (card1.dataset.identificador === card2.dataset.identificador) {
+      } else if (card1.dataset.tipocarta === card2.dataset.tipocarta) {
         card1.classList.add("completed");
         card2.classList.add("completed");
         paresRestantes--;
@@ -126,7 +130,7 @@ function selecionar(item) {
                 2- para não
                 `);
             if (repeat === "1") {
-              Iniciar();
+              iniciarJogo();
             }
           }, 1000);
         }
@@ -141,11 +145,11 @@ function distribuirCartas(lista) {
   html = lista
     .map((item) => {
       return ` 
-        <li class="card" onClick="selecionar(this)" data-identificador="${item.identificador}">
-      <div class="front-face face">
+        <li class="card" data-identifier="card" onClick="selecionarCarta(this)" data-tipocarta="${item.tipocarta}">
+      <div data-identifier="front-face" class="front-face face">
         <img src="resources/front.png" alt="">
       </div>
-      <div class="back-face face">
+      <div class="back-face face" data-identifier="back-face">
         <img src="${item.imagem}" alt="">
       </div>
     </li>
@@ -155,6 +159,8 @@ function distribuirCartas(lista) {
 
   return html;
 }
+
+//Abaixo vêm as funções que definem o timer(relógio)
 
 // Convert time to a format of hours, minutes, seconds, and milliseconds
 
@@ -180,8 +186,8 @@ function timeToString(time) {
 
 //Essa função foi sugerida em uma thread no StackOverFlow, ela é muito interessante pois converte milisegundos em segundos e minutos.
 function millisToMinutesAndSeconds(millis) {
-  var minutes = Math.floor(millis / 60000);
-  var seconds = ((millis % 60000) / 1000).toFixed(0);
+  let minutes = Math.floor(millis / 60000);
+  let seconds = ((millis % 60000) / 1000).toFixed(0);
   let response = '';
   if(minutes > 0)
   response += `${minutes} minuto(s) e ${seconds} segundos`;
@@ -190,24 +196,23 @@ function millisToMinutesAndSeconds(millis) {
   return response;
 }
 
-// Create function to modify innerHTML
 
-function print(txt) {
-  document.getElementById("display").innerHTML = txt;
+function mostrarTimer(timerText) {
+  document.getElementById("display").innerHTML = timerText;
 }
 
-function clockStart() {
+function iniciarTimer() {
   startTime = Date.now() - elapsedTime;
-  timerInterval = setInterval(function printTime() {
+  timerInterval = setInterval(() => {
     if (updateClock) elapsedTime = Date.now() - startTime;
-    print(timeToString(elapsedTime));
+    mostrarTimer(timeToString(elapsedTime));
   }, 10);
 }
 
-function clockReset() {
+function resetTimer() {
   clearInterval(timerInterval);
-  print("00:00:00");
+  mostrarTimer("00:00:00");
   elapsedTime = 0;
 }
 
-Iniciar();
+iniciarJogo();
